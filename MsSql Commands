@@ -1,0 +1,2 @@
+Get All databases | MySql -> SHOW DATABASES;
+->SELECT * FROM master.dbo.sysdatabases
