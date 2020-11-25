@@ -1,0 +1,26 @@
+package com.hdilhara.employeeservice.constrollers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hdilhara.employeeservice.entities.Employee;
+import com.hdilhara.employeeservice.repositories.EmployeeRepo;
+
+@RestController
+@RequestMapping("/employee")
+public class EmployeeController {
+
+	@Autowired
+	EmployeeRepo employeeRepo;
+	
+	@PostMapping("/")
+	public String createEmployee() {
+		
+		employeeRepo.save(new Employee("Thilina",26."this is my address"));
+		
+		return "Employee Created!";
+	}
+	
+}

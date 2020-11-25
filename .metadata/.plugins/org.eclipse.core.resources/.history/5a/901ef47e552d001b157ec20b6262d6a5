@@ -1,0 +1,5 @@
+package com.hdilhara.taskservice.entities;
+
+public class Task {
+
+}
