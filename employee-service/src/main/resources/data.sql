@@ -1,3 +1,5 @@
-insert into employee (age,name) values (26,'Thilina');
-insert into employee (age,name) values (27,'Hida');
-insert into employee (age,name) values (25,'Raina');
+insert into employee (first_name,last_name,birthday,address,contact_no) values ( 'Thilina','Dilhara','1994-11-04','dsd sd dsd sd sdsd','0712915561' );
+insert into employee (first_name,last_name,birthday,address,contact_no) values ( 'Thilina','Dilhara','1994-11-04','dsd sd dsd sd sdsd','0712915561' );
+insert into employee (first_name,last_name,birthday,address,contact_no) values ( 'Thilina','Dilhara','1994-11-04','dsd sd dsd sd sdsd','0712915561' );
+insert into employee (first_name,last_name,birthday,address,contact_no) values ( 'Thilina','Dilhara','1994-11-04','dsd sd dsd sd sdsd','0712915561' );
+insert into employee (first_name,last_name,birthday,address,contact_no) values ( 'Thilina','Dilhara','1994-11-04','dsd sd dsd sd sdsd','0712915561' );

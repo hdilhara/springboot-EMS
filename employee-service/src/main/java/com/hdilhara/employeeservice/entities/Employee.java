@@ -1,5 +1,7 @@
 package com.hdilhara.employeeservice.entities;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,60 +14,51 @@ public class Employee {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int empId;
 	
-	String name;
-	int age;
+	String firstName;
+	String lastName;
+	Date birthday;
+	String contactNo;
 	String address;
 	
 	
-	
-	public Employee() {
-		super();
-	}
-	
-	public Employee( String name, int age, String address) {
-		super();
-		this.empId = empId;
-		this.name = name;
-		this.age = age;
-		this.address = address;
-	}
-
-	
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public int getEmpId() {
 		return empId;
 	}
-
 	public void setEmpId(int empId) {
 		this.empId = empId;
 	}
-
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public int getAge() {
-		return age;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setAge(int age) {
-		this.age = age;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
-
-	@Override
-	public String toString() {
-		return "Employee [empId=" + empId + ", name=" + name + ", age=" + age + ", address=" + address + "]";
+	public Date getBirthday() {
+		return birthday;
 	}
-
-
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+	public String getContactNo() {
+		return contactNo;
+	}
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	
 	
 	
 	

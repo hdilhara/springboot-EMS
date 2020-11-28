@@ -1,0 +1,5 @@
+package com.hdilhara.employeeservice.repositories;
+
+public interface EmpProTask {
+
+}

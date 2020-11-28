@@ -1,0 +1,5 @@
+package com.hdilhara.employeeservice.entities;
+
+public class empProTaskId {
+
+}

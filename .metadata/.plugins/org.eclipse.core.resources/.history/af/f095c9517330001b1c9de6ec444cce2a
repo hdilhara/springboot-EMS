@@ -1,0 +1,27 @@
+package com.hdilhara.clientserver.model;
+
+public class EmpProTask {
+	EmpProTaskId empProTaskId;
+
+	
+	
+	public EmpProTask() {
+		super();
+	}
+
+	public EmpProTask(EmpProTaskId empProTaskId) {
+		super();
+		this.empProTaskId = empProTaskId;
+	}
+
+	public EmpProTaskId getEmpProTaskId() {
+		return empProTaskId;
+	}
+
+	public void setEmpProTaskId(EmpProTaskId empProTaskId) {
+		this.empProTaskId = empProTaskId;
+	}
+	
+	
+	
+}

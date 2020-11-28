@@ -38,6 +38,9 @@ project:
 task:
  service:
   url: http://localhost:9003
+webapp:
+ home:
+  url: http://localhost:5000 
 #security:
 #  oauth2:
 #    client:

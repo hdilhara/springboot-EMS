@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import com.hdilhara.projectservice.entities.Project;
 import com.hdilhara.projectservice.repositories.ProjectRepo;
@@ -53,7 +55,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/")
-	public Project createProject(@ModelAttribute Project pro) {
+	public Project createProject(@RequestBody Project pro) {
 		Project result = null;
 		try {
 			result = projectRepo.save(pro);
@@ -65,7 +67,7 @@ public class ProjectController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public Project deleteEmployee(@PathVariable int id){
+	public Project deleteProject(@PathVariable int id, HttpServletResponse response){
 		Project pro = null;
 		try {
 			pro = projectRepo.findById(id).get();
@@ -73,17 +75,23 @@ public class ProjectController {
 			return pro;
 		}
 		catch(Exception e){
+			response.setStatus(404);
 			return null;
 		}
 	}
 	
 	@PutMapping("/")
-	public Project updateProjectloyee(@RequestBody Project pro){
+	public Project updateProject(@RequestBody Project pro,HttpServletResponse response){
 		try {
+			if(!projectRepo.findById(pro.getProId()).isPresent()) {
+				response.setStatus(404);
+				return null;
+			}
 			projectRepo.save(pro);
 			return pro;
 		}
 		catch(Exception e){
+			response.setStatus(404);
 			return null;
 		}
 	}

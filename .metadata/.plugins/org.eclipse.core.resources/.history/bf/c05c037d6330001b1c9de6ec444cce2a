@@ -1,0 +1,7 @@
+package com.hdilhara.employeeservice.repositories;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface EmpProTaskRepo extends CrudRepository<T, ID> {
+
+}

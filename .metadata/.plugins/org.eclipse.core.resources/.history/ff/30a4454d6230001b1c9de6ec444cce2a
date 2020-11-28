@@ -1,0 +1,10 @@
+package com.hdilhara.employeeservice.entities;
+
+import javax.persistence.Entity;
+
+@Entity
+public class empProTask {
+
+	
+	
+}

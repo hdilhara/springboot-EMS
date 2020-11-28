@@ -1,0 +1,92 @@
+package com.hdilhara.employeeservice.constrollers;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hdilhara.employeeservice.entities.EmpProTask;
+import com.hdilhara.employeeservice.entities.EmpProTaskId;
+import com.hdilhara.employeeservice.repositories.EmpProTaskRepo;
+
+@RestController
+@RequestMapping("/emp/pro/task")
+public class EmpProTaskController {
+
+	@Autowired
+	EmpProTaskRepo empProTaskRepo;
+	
+	@GetMapping("/")
+	public List<EmpProTask> getEmpProTasks(HttpServletResponse response){
+		List<EmpProTask> res = null;
+		try {
+			res =(List<EmpProTask>)empProTaskRepo.findAll();
+		}
+		catch (Exception e) {
+			response.setStatus(404);
+		}
+		return res;
+	}
+	@GetMapping("/{eId}")
+	public List<EmpProTask> getEmpProTasksByEId( @PathVariable int eId, HttpServletResponse response){
+		List<EmpProTask> res = null;
+		try {
+			res =(List<EmpProTask>)empProTaskRepo.findByEmpId(eId);
+		}
+		catch (Exception e) {
+			response.setStatus(404);
+		}
+		return res;
+	}
+//	@GetMapping("/{eID}/{pId}")
+//	public EmpProTask getEmpProTasksByEIdPId( @PathVariable int eId, @PathVariable int pId, @PathVariable int tId ,HttpServletResponse response){
+//		EmpProTask res = null;
+//		EmpProTaskId id = new EmpProTaskId(eId, pId, tId);
+//		try {
+//			res = empProTaskRepo.findById(id).get();
+//			if(res == null)
+//				response.setStatus(404);
+//		}
+//		catch (Exception e) {
+//			response.setStatus(404);
+//		}
+//		return res;
+//	}
+	@GetMapping("/{eId}/{pId}/{tId}")
+	public EmpProTask getEmpProTask( @PathVariable int eId, @PathVariable int pId, @PathVariable int tId ,HttpServletResponse response){
+		EmpProTask res = null;
+		EmpProTaskId id = new EmpProTaskId(eId, pId, tId);
+		try {
+			res = empProTaskRepo.findById(id).get();
+			if(res == null)
+				response.setStatus(404);
+		}
+		catch (Exception e) {
+			response.setStatus(404);
+		}
+		return res;
+	}
+	
+	@PostMapping("/")
+	public EmpProTask addEmpProTask(@RequestBody EmpProTaskId empProTaskId, HttpServletResponse response) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		EmpProTask empProTask = new EmpProTask(empProTaskId);
+		try {
+			empProTaskRepo.save(empProTask);
+			return empProTask;
+		}
+		catch (Exception e) {
+			response.setStatus(404);
+			return null;
+		}		
+	}
+	
+	
+}

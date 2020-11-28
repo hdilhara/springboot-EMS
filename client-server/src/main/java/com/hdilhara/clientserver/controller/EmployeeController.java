@@ -15,6 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hdilhara.clientserver.model.Employee;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -52,7 +54,6 @@ public class EmployeeController {
 	
 	@GetMapping("/")
 	public ResponseEntity<List<Employee>> getEmployees(Principal p, HttpServletResponse response) {
-		System.out.println(">>>>"+p);
 		List<Employee> emp = null;
 		RestTemplate rt = new RestTemplate();
 		try {

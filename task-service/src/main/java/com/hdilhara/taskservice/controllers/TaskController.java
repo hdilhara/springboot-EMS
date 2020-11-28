@@ -55,7 +55,7 @@ public class TaskController {
 	}
 	
 	@PostMapping("/")
-	public Task createTask(@ModelAttribute Task task) {
+	public Task createTask(@RequestBody Task task) {
 		Task result = null;
 		try {
 			result = taskRepo.save(task);
@@ -66,25 +66,31 @@ public class TaskController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public Task deleteTask(@PathVariable int id){
-		Task task = null;
+	public Task deleteTask(@PathVariable int id, HttpServletResponse response){
+		Task pro = null;
 		try {
-			task = taskRepo.findById(id).get();
+			pro = taskRepo.findById(id).get();
 			taskRepo.deleteById(id);
-			return task;
+			return pro;
 		}
 		catch(Exception e){
+			response.setStatus(404);
 			return null;
 		}
 	}
 	
 	@PutMapping("/")
-	public Task updateTask(@RequestBody Task task){
+	public Task updateTask(@RequestBody Task pro,HttpServletResponse response){
 		try {
-			taskRepo.save(task);
-			return task;
+			if(!taskRepo.findById(pro.getTaskId()).isPresent()) {
+				response.setStatus(404);
+				return null;
+			}
+			taskRepo.save(pro);
+			return pro;
 		}
 		catch(Exception e){
+			response.setStatus(404);
 			return null;
 		}
 	}
