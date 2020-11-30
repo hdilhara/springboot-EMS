@@ -1,5 +1,0 @@
-package com.hdilhara.employeeservice.repositories;
-
-interface EmployeeRepo {
-
-}

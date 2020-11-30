@@ -1,7 +1,0 @@
-package com.hdilhara.clientserver.model;
-
-public class Employee {
-	
-	int i
-
-}

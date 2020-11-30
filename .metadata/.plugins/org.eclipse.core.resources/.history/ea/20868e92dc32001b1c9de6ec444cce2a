@@ -1,0 +1,5 @@
+package com.thilina.authServer;
+
+public class LogoutController {
+
+}

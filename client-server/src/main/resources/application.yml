@@ -40,7 +40,7 @@ task:
   url: http://localhost:9003
 webapp:
  home:
-  url: http://localhost:5000 
+  url: http://localhost:3000 
 #security:
 #  oauth2:
 #    client:
