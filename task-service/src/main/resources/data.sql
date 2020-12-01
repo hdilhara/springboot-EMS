@@ -1,0 +1,7 @@
+insert into task ( task_title, description, asign_date , due_date) values ('Implement Oauth', 'implement oauth server and write docs including api endpoints','2020-1-07','2020-07-06');
+insert into task ( task_title, description, asign_date , due_date) values ('Implement Oauth', 'implement oauth server and write docs including api endpoints','2020-1-07','2020-07-06');
+insert into task ( task_title, description, asign_date , due_date) values ('Implement Oauth', 'implement oauth server and write docs including api endpoints','2020-1-07','2020-07-06');
+insert into task ( task_title, description, asign_date , due_date) values ('Implement Oauth', 'implement oauth server and write docs including api endpoints','2020-1-07','2020-07-06');
+insert into task ( task_title, description, asign_date , due_date) values ('Implement Oauth', 'implement oauth server and write docs including api endpoints','2020-1-07','2020-07-06');
+insert into task ( task_title, description, asign_date , due_date) values ('Implement Oauth', 'implement oauth server and write docs including api endpoints','2020-1-07','2020-07-06');
+insert into task ( task_title, description, asign_date , due_date) values ('Implement Oauth', 'implement oauth server and write docs including api endpoints','2020-1-07','2020-07-06');
