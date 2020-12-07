@@ -11,9 +11,25 @@ export function getProjects(callBack) {
         .then(res => callBack(res.data))
         .catch(e => console.log(e));
 }
+export function getProjectsByIds(ids, callBack) {
+    console.log(ids)
+    ids = ids.join(',');
+    Axios.get('http://localhost:9000/project/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
+        .then(res => callBack(res.data))//callBack(res.data))
+        .catch(e => console.log(e));
+}
 export function getTasks(callBack) {
     Axios.get(taskAPIurl)
         .then(res => callBack(res.data))
+        .catch(e => console.log(e));
+}
+export function getTasksByIds(ids, callBack) {
+    console.log("sdsdsds>>>>" + ids)
+    ids = ids.join(',');
+    console.log('dsfsdgfdgfhfghfghfghfghfgh')
+    console.log('http://localhost:9000/task/ids/' + ids)
+    Axios.get('http://localhost:9000/task/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
+        .then(res => callBack(res.data))//callBack(res.data))
         .catch(e => console.log(e));
 }
 export function addEmpProTask(value, callBack) {
@@ -26,12 +42,16 @@ export function removeEmpProTask(value, callBack) {
         .then(res => callBack('success'))
         .catch(e => console.log(e));
 }
-export function getEmpProTaskByEID(value, callBack) {
-    console.log(empProTaskAPIurl + value)
-    Axios.get(empProTaskAPIurl + value)
-        .then(res => { console.log(value); callBack(res.data) })
+export function getEmpProTaskByEID(empId, callBack) {
+    console.log(empProTaskAPIurl + empId)
+    Axios.get(empProTaskAPIurl + empId)
+        .then(res => { callBack(res.data) })
         .catch(e => console.log(e));
 }
+
+
+
+
 // class EmployeeService {
 
 //     constructor(setState) {

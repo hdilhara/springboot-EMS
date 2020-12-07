@@ -59,6 +59,17 @@ public class ProjectController {
 			return null;
 		}
 	}
+	@GetMapping("/ids/{ids}")
+	public ResponseEntity<List<Project>> getProjectsByIds( @PathVariable String ids, HttpServletResponse response) {
+		RestTemplate rt = new RestTemplate();
+		try {
+			return rt.exchange(projectServiceURL+"/project/ids/"+ids, HttpMethod.GET, new HttpEntity<Project>(new HttpHeaders()), new ParameterizedTypeReference<List<Project>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+		}
+		catch(HttpClientErrorException e) {
+			response.setStatus(404);
+			return null;
+		}
+	}
 	@PostMapping("/")
 	public ResponseEntity<Project> createProject(@RequestBody Project project, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();

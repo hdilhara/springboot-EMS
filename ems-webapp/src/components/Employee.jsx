@@ -46,6 +46,7 @@ class Employee extends Component {
         value = { ...value };
         delete value.UPDATE;
         delete value.DELETE;
+        delete value.VIEW;
         this.setState({ initialValue: value })
         this.setState({ initialHandeler: this.updateObject })
         const modalShow = !this.state.modalShow;
@@ -59,7 +60,11 @@ class Employee extends Component {
     addButtonToValueSet(values, attrName, btnName, handeler, type) {
         //add update btn
         values
-            .map(v => { v[attrName] = <button className={'btn btn-sm btn-' + type} onClick={() => handeler(v)}>{btnName}</button > });
+            .map(v => { v[attrName] = <button className={'btn btn-sm btn-outline-' + type} onClick={() => handeler(v)}>{btnName}</button > });
+    }
+
+    handleView = (value) => {
+        this.props.history.push('/view/' + value.empId);
     }
 
     render() {
@@ -69,6 +74,7 @@ class Employee extends Component {
         if (values == null)
             return <h1>There is no data availabele</h1>
         else {
+            this.addButtonToValueSet(values, 'VIEW', "view", this.handleView, 'success');
             this.addButtonToValueSet(values, 'UPDATE', "update", this.handleUpdate, 'success');
             this.addButtonToValueSet(values, 'DELETE', "delete", this.deleteObject, 'danger');
 

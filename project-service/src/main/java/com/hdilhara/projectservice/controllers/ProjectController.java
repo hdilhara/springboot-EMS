@@ -1,5 +1,6 @@
 package com.hdilhara.projectservice.controllers;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +53,20 @@ public class ProjectController {
 		if(emp == null)
 			response.setStatus(404);
 		return emp;
+	}
+	
+	@GetMapping("/ids/{ids}")
+	public List<Project> getProjectsUsingIds(@PathVariable List<Integer> ids, HttpServletResponse response) {
+		List<Project> projects =null;
+		try {
+			projects  = (List<Project>) projectRepo.findAllById(ids);
+		}catch (Exception e) {
+//			System.out.println(e);
+		}
+//		if(Projects == null)
+//			response.setStatus(404);
+		return projects;
+		
 	}
 	
 	@PostMapping("/")

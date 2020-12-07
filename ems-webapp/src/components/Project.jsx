@@ -32,8 +32,6 @@ class Project extends Component {
         this.setState({ modalShow });
     }
     saveObject = (value) => {
-        console.log(".................>>>>>")
-        console.log(value)
         Axios
             .post(this.state.apiUrl, value)
             .then(res => { this.setState({ modalShow: false }); this.loadValues(); console.log(res); })

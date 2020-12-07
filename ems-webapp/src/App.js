@@ -19,11 +19,13 @@ import TaskOperations from './components/TaskOperations';
 import AssignTasks from './components/AssignTasks';
 import UnAssignTask from './components/UnAssignTask';
 import PageNotFound from './components/common/PageNotFound';
+import ViewProjectsTasks from './components/ViewProjectsTasks';
 
 import { isLogedIn } from './services/loginService';
 import AuthRoute from './components/common/AuthRoute';
 import Forbidden from './components/common/Forbidden';
 import About from './components/About';
+
 
 function App() {
   return (
@@ -35,6 +37,7 @@ function App() {
         <AuthRoute path="/employee" component={Employee} />
         <AuthRoute path="/project" component={Project} />
         <AuthRoute path="/task" component={Task} />
+        <AuthRoute path="/view/:empId" component={ViewProjectsTasks} />
         <Route path="/about" component={About} />
         <AuthRoute path="/operations/employee" component={EmployeeOperations} />
         <AuthRoute path="/operations/project" component={ProjectOperations} />

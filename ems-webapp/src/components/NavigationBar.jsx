@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, NavDropdown, Item, Nav, Brand } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { getAuthorities } from '../services/loginService';
-
+import { authserveruri, clientserveruri } from '../config/config';
 import axios from 'axios';
 
 
@@ -23,7 +23,7 @@ class NavigationBar extends Component {
         this.setState({ isLogged: false });
         this.setState({ user: 'Login' });
         // window.location.replace('/');
-        window.location.replace("http://localhost:9006/logout/me");
+        window.location.replace(authserveruri + "/logout/me");
 
     }
 
@@ -75,7 +75,7 @@ class NavigationBar extends Component {
                         ) : null
                         }
                         {isLogged ? null : (
-                            <Nav.Link eventKey={2} href="http://localhost:9006/oauth/authorize?client_id=client&redirect_uri=http://localhost:9000/login&response_type=code&state=hi4VfM">
+                            <Nav.Link eventKey={2} href={authserveruri + "/oauth/authorize?client_id=client&redirect_uri=" + clientserveruri + "/login&response_type=code&state=hi4VfM"}>
                                 Login
                             </Nav.Link>
                         )}
@@ -115,7 +115,7 @@ class NavigationBar extends Component {
 
     getUser() {
 
-        axios.get('http://localhost:9000/user?token=' + this.getToken())
+        axios.get(clientserveruri + '/user?token=' + this.getToken())
             .then(res => {
                 let user = res.data.principal;
                 localStorage.setItem("userDetails", JSON.stringify(user));

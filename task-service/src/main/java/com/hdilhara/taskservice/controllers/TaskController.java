@@ -54,6 +54,19 @@ public class TaskController {
 		return task;
 	}
 	
+	@GetMapping("/ids/{ids}")
+	public List<Task> getTasksByIds(@PathVariable List<Integer> ids, HttpServletResponse response) {
+		List<Task> tasks = null;
+		try {
+			tasks = (List<Task>)taskRepo.findAllById(ids);
+		}catch (Exception e) {
+//			System.out.println(e);
+		}
+//		if(Tasks == null)
+//			response.setStatus(404);
+		return tasks;
+	}
+	
 	@PostMapping("/")
 	public Task createTask(@RequestBody Task task) {
 		Task result = null;

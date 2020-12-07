@@ -1,0 +1,65 @@
+https://www.digitalocean.com/community/tutorials/working-with-docker-containers
+
+-------------------------------------------------------------------------------
+
+docker build -t demo-app <path where Dockerfile > .
+
+docker images
+
+docker rmi b86e43573df4
+
+docker run -p 8888:9000 c0ca7bb3acbf
+
+--------------------------------------------------------------------------------
+
+FROM openjdk:8-jdk-alpine
+2
+COPY target/household-0.0.1-SNAPSHOT.jar /app/app.jar
+3
+CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/app.jar"]
+
+-------------------------------
+docker ps 
+docker ps -a
+
+docker stop b86e43573df4
+docker rm b86e43573df4
+
+----------------------------------------------------------------------------------
+SETUP-Env variables
+-port should get from heroku 
+	server:
+	 port: {PORT}
+
+-when packaging supply port to complete the test cases successfully
+	$mvn clean
+	$ mvn -DPORT=9000 package
+
+-run docker with environment variables
+	$ docker run -e PORT=8088 -p 8088:8088 c910e71b9876
+
+---------------------------------------
+For Heroku
+$heroku  login
+$heroku container:login  - log into heroku container registry
+
+$heroku apps
+$heroku create - if not app
+
+$heroku container:push web --app <app id>  ->create and push the image 
+$heroku container:release web  --app agile-spire-11720  -> create the container using image
+
+$ heroku open --app agile-spire-11720
+
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -61,6 +61,20 @@ public class EmpProTaskController {
 		}
 	}
 	
+	@GetMapping("/eid/pid/{eId}/{pId}")
+	public ResponseEntity<List<EmpProTask>> getEmpProTaskByEidPid( @PathVariable int eId, @PathVariable int pId, HttpServletResponse response){
+		List<EmpProTask> res = null;
+		HttpHeaders headers = new HttpHeaders();
+		RestTemplate rt = new RestTemplate();
+		try {
+			return rt.exchange(empServiceURL+"/emp-pro-task/eid/pid/"+eId+"/"+pId, HttpMethod.GET, new HttpEntity<EmpProTask>(headers), new ParameterizedTypeReference<List<EmpProTask>>(){});
+		}
+		catch(HttpClientErrorException e) {
+			response.setStatus(404);
+			return null;
+		}
+	}
+	
 	@PostMapping("/")
 	public ResponseEntity<EmpProTask> addEmpProTask(@RequestBody EmpProTaskId empProTaskId, HttpServletResponse response) {
 		List<EmpProTask> res = null;

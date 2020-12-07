@@ -47,6 +47,25 @@ public class EmpProTaskController {
 		}
 		return res;
 	}
+	
+	@GetMapping("/eid/pid/{eId}/{pId}")
+	public List<EmpProTask> getEmpProTasksByEIdPId( @PathVariable int eId, @PathVariable int pId, HttpServletResponse response){
+		List<EmpProTask> res = null;
+		try {
+			res =(List<EmpProTask>)empProTaskRepo.findAll();
+			res = res.stream().filter( v -> {
+				if((v.getId().getEmpId() == eId) && (v.getId().getProId() == pId) )
+					return true;
+				else
+					return false;
+			} ).collect(Collectors.toList());
+		}
+		catch (Exception e) {
+			response.setStatus(404);
+		}
+		return res;
+	}
+
 
 	@PostMapping("/")
 	public EmpProTask addEmpProTask(@RequestBody EmpProTaskId empProTaskId, HttpServletResponse response) {

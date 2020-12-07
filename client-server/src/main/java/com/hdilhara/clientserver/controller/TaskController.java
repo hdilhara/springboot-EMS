@@ -59,6 +59,19 @@ public class TaskController {
 			return null;
 		}
 	}
+	
+	@GetMapping("/ids/{ids}")
+	public ResponseEntity<List<Task>> getProjectsByIds( @PathVariable String ids ,HttpServletResponse response) {
+		RestTemplate rt = new RestTemplate();
+		try {
+			return rt.exchange(taskServiceURL+"/task/ids/"+ids, HttpMethod.GET, new HttpEntity<Task>(new HttpHeaders()), new ParameterizedTypeReference<List<Task>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+		}
+		catch(HttpClientErrorException e) {
+			response.setStatus(404);
+			return null;
+		}
+	}
+	
 	@PostMapping("/")
 	public ResponseEntity<Task> createTask(@RequestBody Task task, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
