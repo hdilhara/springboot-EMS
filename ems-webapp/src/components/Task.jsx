@@ -1,4 +1,5 @@
-import Axios from 'axios';
+// import Axios from 'axios';
+import { authAxios } from '../services/backEndService';
 import React, { Component } from 'react';
 import Table from './common/Table';
 import TaskForm from './common/TaskForm';
@@ -19,7 +20,7 @@ class Task extends Component {
 
 
     loadValues() {
-        Axios.get(this.state.apiUrl)
+        authAxios.get(this.state.apiUrl)
             .then(res => { res.data.length > 0 ? this.setState({ values: res.data }) : this.setState({ values: null }); this.setState({ isLoading: false }) })
             .catch(e => console.log(e));
     }
@@ -31,13 +32,13 @@ class Task extends Component {
         this.setState({ modalShow });
     }
     saveObject = (value) => {
-        Axios
+        authAxios
             .post(this.state.apiUrl, value)
             .then(res => { this.setState({ modalShow: false }); this.loadValues(); console.log(res); })
             .catch(err => console.log(err));
     }
     updateObject = (value) => {
-        Axios
+        authAxios
             .put(this.state.apiUrl, value)
             .then(res => { this.setState({ modalShow: false }); this.loadValues(); console.log(res); })
             .catch(err => console.log(err));
@@ -52,14 +53,14 @@ class Task extends Component {
         this.setState({ modalShow });
     }
     deleteObject = (value) => {
-        Axios.delete(this.state.apiUrl + value.taskId)
+        authAxios.delete(this.state.apiUrl + value.taskId)
             .then(res => { this.loadValues() });
     }
 
     addButtonToValueSet(values, attrName, btnName, handeler, type) {
         //add update btn
         values
-            .map(v => { v[attrName] = <button className={'btn btn-sm btn-' + type} onClick={() => handeler(v)}>{btnName}</button > });
+            .map(v => { v[attrName] = <button className={'btn btn-sm btn-outline-' + type} onClick={() => handeler(v)}>{btnName}</button > });
     }
 
     render() {

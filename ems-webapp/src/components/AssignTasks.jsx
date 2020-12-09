@@ -23,7 +23,11 @@ class AssignTasks extends Component {
 
     onFormSubmit = (e) => {
         e.preventDefault();
-        addEmpProTask(this.state.value, this.callbackAddEPT)
+        if (this.state.value.empId && this.state.value.proId && this.state.value.taskId) {
+            addEmpProTask(this.state.value, this.callbackAddEPT)
+        }
+        else
+            window.alert("Please select all three values!");
     }
 
     render() {
@@ -63,7 +67,7 @@ class AssignTasks extends Component {
                             disVal3='description'
                         />
                         <br />
-                        <button style={{ margin: '25px 0' }} className="btn btn-success">Assign Task</button>
+                        <button style={{ margin: '25px 0' }} className="btn btn-sm btn-success">Assign Task</button>
                     </div>
                 </form>
             </div>
@@ -82,7 +86,12 @@ class AssignTasks extends Component {
         this.setState({ tasks: values });
     }
     callbackAddEPT = (values) => {
-
+        window.alert("Task added successfully!");
+        let value = this.state.value;
+        value['taskId'] = '';
+        this.setState({ tasks: '' });
+        this.setState({ value });
+        getTasks(this.callBackGetTasks);
     }
 
     componentDidMount() {

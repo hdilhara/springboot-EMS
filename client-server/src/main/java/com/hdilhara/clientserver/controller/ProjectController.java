@@ -2,6 +2,7 @@ package com.hdilhara.clientserver.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -35,12 +36,22 @@ public class ProjectController {
 	@Value("${project.service.url}")
 	public String projectServiceURL; 
 	
+	public void setAuthorizationHeader(HttpServletRequest request, HttpHeaders headers ) {
+		try {
+			headers.set("Authorization", request.getHeader("Authorization") );
+		}catch (NullPointerException e) {
+			//log error
+		}
+	}
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<Project> getProject(@PathVariable int id, HttpServletResponse response) {
+	public ResponseEntity<Project> getProject(@PathVariable int id,HttpServletRequest request, HttpServletResponse response) {
 		System.out.println(projectServiceURL);
 		RestTemplate rt = new RestTemplate();
 		try {
-			return rt.exchange(projectServiceURL+"/project/"+id, HttpMethod.GET, new HttpEntity<Project>(new HttpHeaders()), Project.class);//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers =new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(projectServiceURL+"/project/"+id, HttpMethod.GET, new HttpEntity<Project>(headers), Project.class);//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -49,10 +60,12 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/")
-	public ResponseEntity<List<Project>> getProjects( HttpServletResponse response) {
+	public ResponseEntity<List<Project>> getProjects( HttpServletRequest request, HttpServletResponse response) {
 		RestTemplate rt = new RestTemplate();
 		try {
-			return rt.exchange(projectServiceURL+"/project/", HttpMethod.GET, new HttpEntity<Project>(new HttpHeaders()), new ParameterizedTypeReference<List<Project>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers =new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(projectServiceURL+"/project/", HttpMethod.GET, new HttpEntity<Project>(headers), new ParameterizedTypeReference<List<Project>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -60,10 +73,12 @@ public class ProjectController {
 		}
 	}
 	@GetMapping("/ids/{ids}")
-	public ResponseEntity<List<Project>> getProjectsByIds( @PathVariable String ids, HttpServletResponse response) {
+	public ResponseEntity<List<Project>> getProjectsByIds( @PathVariable String ids, HttpServletRequest request, HttpServletResponse response) {
 		RestTemplate rt = new RestTemplate();
 		try {
-			return rt.exchange(projectServiceURL+"/project/ids/"+ids, HttpMethod.GET, new HttpEntity<Project>(new HttpHeaders()), new ParameterizedTypeReference<List<Project>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers =new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(projectServiceURL+"/project/ids/"+ids, HttpMethod.GET, new HttpEntity<Project>(headers), new ParameterizedTypeReference<List<Project>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -71,10 +86,11 @@ public class ProjectController {
 		}
 	}
 	@PostMapping("/")
-	public ResponseEntity<Project> createProject(@RequestBody Project project, HttpServletResponse response){
+	public ResponseEntity<Project> createProject(@RequestBody Project project,HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
+		headers.setContentType(MediaType.APPLICATION_JSON);	
+		setAuthorizationHeader(request, headers);
 		HttpEntity<Project> he = new HttpEntity<Project>(project,headers);
 		try {
 			return rt.exchange(projectServiceURL+"/project/", HttpMethod.POST, he, Project.class);//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)
@@ -86,9 +102,10 @@ public class ProjectController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public  ResponseEntity<Project> deleteProject(@PathVariable int id, HttpServletResponse response){
+	public  ResponseEntity<Project> deleteProject(@PathVariable int id, HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		ResponseEntity<Project> res;
 		HttpEntity<Project> he = new HttpEntity<Project>(headers);
 		try {
@@ -101,10 +118,11 @@ public class ProjectController {
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<Project> updateProject(@RequestBody Project emp, HttpServletResponse response){
+	public ResponseEntity<Project> updateProject(@RequestBody Project emp,HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
+		headers.setContentType(MediaType.APPLICATION_JSON);	
+		setAuthorizationHeader(request, headers);
 		HttpEntity<Project> he = new HttpEntity<Project>(emp,headers);
 		try {
 			return rt.exchange(projectServiceURL+"/project/", HttpMethod.PUT, he, Project.class);//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)

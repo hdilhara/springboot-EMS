@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -38,13 +39,23 @@ public class EmployeeController {
 	@Value("${employee.service.url}")
 	public String employeeServiceURL; 
 	
+	public void setAuthorizationHeader(HttpServletRequest request, HttpHeaders headers ) {
+		try {
+			headers.set("Authorization", request.getHeader("Authorization") );
+		}catch (NullPointerException e) {
+			//log error
+		}
+	}
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<Employee> getEmployee(@PathVariable int id, HttpServletResponse response) {
+	public ResponseEntity<Employee> getEmployee(@PathVariable int id, HttpServletResponse response,HttpServletRequest request) {
 		System.out.println(">>>>>");
 		Employee emp = null;
 		RestTemplate rt = new RestTemplate();
 		try {
-			return rt.exchange(employeeServiceURL+"/employee/"+id, HttpMethod.GET, new HttpEntity<Employee>(new HttpHeaders()), Employee.class);//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers = new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(employeeServiceURL+"/employee/"+id, HttpMethod.GET, new HttpEntity<Employee>(headers), Employee.class);//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -53,11 +64,13 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/")
-	public ResponseEntity<List<Employee>> getEmployees(Principal p, HttpServletResponse response) {
+	public ResponseEntity<List<Employee>> getEmployees(Principal p,HttpServletRequest request, HttpServletResponse response) {
 		List<Employee> emp = null;
-		RestTemplate rt = new RestTemplate();
+		RestTemplate rt = new RestTemplate();		
 		try {
-			return rt.exchange(employeeServiceURL+"/employee/", HttpMethod.GET, new HttpEntity<Employee>(new HttpHeaders()), new ParameterizedTypeReference<List<Employee>>(){});//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers = new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(employeeServiceURL+"/employee/", HttpMethod.GET, new HttpEntity<Employee>(headers), new ParameterizedTypeReference<List<Employee>>(){});//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -71,9 +84,10 @@ public class EmployeeController {
 	}
 	
 	@PostMapping("/")
-	public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee, HttpServletResponse response){
+	public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee,HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		headers.setContentType(MediaType.APPLICATION_JSON);		
 		HttpEntity<Employee> he = new HttpEntity<Employee>(employee,headers);
 		try {
@@ -86,9 +100,10 @@ public class EmployeeController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public  ResponseEntity<Employee> deleteEmployee(@PathVariable int id, HttpServletResponse response){
+	public  ResponseEntity<Employee> deleteEmployee(@PathVariable int id,HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		ResponseEntity<Employee> res;
 		HttpEntity<Employee> he = new HttpEntity<Employee>(headers);
 		try {
@@ -101,10 +116,11 @@ public class EmployeeController {
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<Employee> updateEmployee(@RequestBody Employee emp, HttpServletResponse response){
+	public ResponseEntity<Employee> updateEmployee(@RequestBody Employee emp,HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
+		headers.setContentType(MediaType.APPLICATION_JSON);	
+		setAuthorizationHeader(request, headers);
 		HttpEntity<Employee> he = new HttpEntity<Employee>(emp,headers);
 		try {
 			return rt.exchange(employeeServiceURL+"/employee/", HttpMethod.PUT, he, Employee.class);//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)

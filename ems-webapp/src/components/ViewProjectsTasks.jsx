@@ -1,4 +1,5 @@
-import Axios from 'axios';
+// import Axios from 'axios';
+import { authAxios } from '../services/backEndService';
 import React, { Component } from 'react';
 import Table from './common/Table';
 import AppModal from './common/AppModal';
@@ -26,6 +27,7 @@ class ViewProjectsTasks extends Component {
 
     handleData = (data) => {
         let proIds = [];
+        console.log("xmsdjsds")
         for (let d of data) {
             proIds.push(d.id.proId);
         }
@@ -35,10 +37,13 @@ class ViewProjectsTasks extends Component {
             proIds = proIds.filter((a, b) => {
                 if ((b - 1) >= 0 && a != proIds[b - 1]) {
                     return true
+                } else if ((b - 1) < 0) {
+                    return true;
                 }
                 else
                     return false
             });
+            console.log(proIds)
             getProjectsByIds(proIds, this.setProjects)
         }
         else {
@@ -60,7 +65,7 @@ class ViewProjectsTasks extends Component {
     }
 
     handleTask = (pid) => {
-        Axios.get(empProTaskAPIurl + 'eid/pid/' + this.empId + '/' + pid)
+        authAxios.get(empProTaskAPIurl + 'eid/pid/' + this.empId + '/' + pid)
             .then(res => {
                 let taskIds = [];
                 for (let x of res.data) {

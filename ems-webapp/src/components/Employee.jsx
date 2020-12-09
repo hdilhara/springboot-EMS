@@ -1,4 +1,5 @@
-import Axios from 'axios';
+// import Axios from 'axios';
+import { authAxios } from '../services/backEndService';
 import React, { Component } from 'react';
 import Table from './common/Table';
 import { employeeApiUrl } from '../config/config';
@@ -19,7 +20,7 @@ class Employee extends Component {
 
 
     loadValues() {
-        Axios.get(this.state.apiUrl)
+        authAxios.get(this.state.apiUrl)
             .then(res => { res.data.length > 0 ? this.setState({ values: res.data }) : this.setState({ values: null }); this.setState({ isLoading: false }) })
             .catch(e => console.log(e));
     }
@@ -31,13 +32,13 @@ class Employee extends Component {
         this.setState({ modalShow });
     }
     saveObject = (value) => {
-        Axios
+        authAxios
             .post(this.state.apiUrl, value)
             .then(res => { this.setState({ modalShow: false }); this.loadValues(); console.log(res); })
             .catch(err => console.log(err));
     }
     updateObject = (value) => {
-        Axios
+        authAxios
             .put(this.state.apiUrl, value)
             .then(res => { this.setState({ modalShow: false }); this.loadValues(); console.log(res); })
             .catch(err => console.log(err));
@@ -53,7 +54,7 @@ class Employee extends Component {
         this.setState({ modalShow });
     }
     deleteObject = (value) => {
-        Axios.delete(this.state.apiUrl + value.empId)
+        authAxios.delete(this.state.apiUrl + value.empId)
             .then(res => { this.loadValues() });
     }
 

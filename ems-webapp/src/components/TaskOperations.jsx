@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import { authAxios } from '../services/backEndService';
 import React, { Component } from 'react';
 import Table from './common/Table';
 import { taskAPIurl } from '../config/config';
@@ -21,7 +21,7 @@ class TaskOperations extends Component {
 
 
     loadValues() {
-        Axios.get(this.state.apiUrl)
+        authAxios.get(this.state.apiUrl)
             .then(res => { this.setState({ values: res.data }); this.setState({ isLoading: false }) })
             .catch(e => console.log(e));
     }
@@ -33,13 +33,13 @@ class TaskOperations extends Component {
         this.setState({ modalShow });
     }
     saveObject = (value) => {
-        Axios
+        authAxios
             .post(this.state.apiUrl, value)
             .then(res => { this.setState({ modalShow: false }); this.loadValues(); console.log(res); })
             .catch(err => console.log(err));
     }
     updateObject = (value) => {
-        Axios
+        authAxios
             .put(this.state.apiUrl, value)
             .then(res => { this.setState({ modalShow: false }); this.loadValues(); console.log(res); })
             .catch(err => console.log(err));
@@ -53,7 +53,7 @@ class TaskOperations extends Component {
         this.setState({ modalShow });
     }
     deleteObject = () => {
-        Axios.delete(this.state.apiUrl + this.state.selectedVal)
+        authAxios.delete(this.state.apiUrl + this.state.selectedVal)
             .then(res => { this.loadValues() });
     }
 
@@ -76,7 +76,7 @@ class TaskOperations extends Component {
         if (values == null)
             return null;//<h1>There is no data availabele</h1>
         else {
-            return (<div className="container app-center-container">
+            return (<div className="container app-center-container  ">
                 <h1>{this.state.objectName}</h1>
                 <div>
                     <AppModal
@@ -96,8 +96,10 @@ class TaskOperations extends Component {
                         onChanegeHandeler={this.handleDropDownOnChange}
                     />
                     <br />
-                    <button style={{ margin: '20px 20px 20px 0' }} className="btn btn-success" onClick={this.handleUpdate} >Update</button>
-                    <button style={{ margin: '20px 20px 20px 0' }} className="btn btn-danger" onClick={this.deleteObject} >Delete</button>
+                    <div>
+                        <button style={{ margin: '20px 20px 20px 0' }} className="btn btn-success" onClick={this.handleUpdate} >Update</button>
+                        <button style={{ margin: '20px 20px 20px 0' }} className="btn btn-danger" onClick={this.deleteObject} >Delete</button>
+                    </div>
                 </div>
 
             </div>)

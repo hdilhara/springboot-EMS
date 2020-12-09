@@ -15,7 +15,8 @@ const AppSelectOption = (props) => {
 const styles = {
     appDropdown: {
         width: '50%',
-        minWidth: '350px'
+        minWidth: '350px',
+        maxWidth: '350px'
     }
 }
 export default AppSelectOption;

@@ -2,6 +2,7 @@ package com.hdilhara.clientserver.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -30,13 +31,24 @@ import com.hdilhara.clientserver.model.Employee;
 @RequestMapping("/emp-pro-task")
 public class EmpProTaskController {
 
+	
+	
 	@Value("${employee.service.url}")
 	private String empServiceURL;
 	
+	public void setAuthorizationHeader(HttpServletRequest request, HttpHeaders headers ) {
+		try {
+			headers.set("Authorization", request.getHeader("Authorization") );
+		}catch (NullPointerException e) {
+			//log error
+		}
+	}
+	
 	@GetMapping("/")
-	public ResponseEntity<List<EmpProTask>> getEmpProTasks(HttpServletResponse response){
+	public ResponseEntity<List<EmpProTask>> getEmpProTasks(HttpServletRequest request, HttpServletResponse response){
 		List<EmpProTask> res = null;
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		RestTemplate rt = new RestTemplate();
 		try {
 			return rt.exchange(empServiceURL+"/emp-pro-task/", HttpMethod.GET, new HttpEntity<EmpProTask>(headers), new ParameterizedTypeReference<List<EmpProTask>>(){});
@@ -48,9 +60,10 @@ public class EmpProTaskController {
 	}
 	
 	@GetMapping("/{eId}")
-	public ResponseEntity<List<EmpProTask>> getEmpProTask( @PathVariable int eId, HttpServletResponse response){
+	public ResponseEntity<List<EmpProTask>> getEmpProTask( @PathVariable int eId,HttpServletRequest request,  HttpServletResponse response){
 		List<EmpProTask> res = null;
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		RestTemplate rt = new RestTemplate();
 		try {
 			return rt.exchange(empServiceURL+"/emp-pro-task/"+eId, HttpMethod.GET, new HttpEntity<EmpProTask>(headers), new ParameterizedTypeReference<List<EmpProTask>>(){});
@@ -62,9 +75,10 @@ public class EmpProTaskController {
 	}
 	
 	@GetMapping("/eid/pid/{eId}/{pId}")
-	public ResponseEntity<List<EmpProTask>> getEmpProTaskByEidPid( @PathVariable int eId, @PathVariable int pId, HttpServletResponse response){
+	public ResponseEntity<List<EmpProTask>> getEmpProTaskByEidPid( @PathVariable int eId, @PathVariable int pId,HttpServletRequest request, HttpServletResponse response){
 		List<EmpProTask> res = null;
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		RestTemplate rt = new RestTemplate();
 		try {
 			return rt.exchange(empServiceURL+"/emp-pro-task/eid/pid/"+eId+"/"+pId, HttpMethod.GET, new HttpEntity<EmpProTask>(headers), new ParameterizedTypeReference<List<EmpProTask>>(){});
@@ -76,9 +90,10 @@ public class EmpProTaskController {
 	}
 	
 	@PostMapping("/")
-	public ResponseEntity<EmpProTask> addEmpProTask(@RequestBody EmpProTaskId empProTaskId, HttpServletResponse response) {
+	public ResponseEntity<EmpProTask> addEmpProTask(@RequestBody EmpProTaskId empProTaskId,HttpServletRequest request, HttpServletResponse response) {
 		List<EmpProTask> res = null;
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		RestTemplate rt = new RestTemplate();
 
 		try {
@@ -90,9 +105,10 @@ public class EmpProTaskController {
 		}		
 	}
 	@PostMapping("/remove")
-	public ResponseEntity<EmpProTask> removeEmpProTask(@RequestBody EmpProTaskId empProTaskId, HttpServletResponse response) {
+	public ResponseEntity<EmpProTask> removeEmpProTask(@RequestBody EmpProTaskId empProTaskId,HttpServletRequest request, HttpServletResponse response) {
 		List<EmpProTask> res = null;
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		RestTemplate rt = new RestTemplate();
 
 		try {

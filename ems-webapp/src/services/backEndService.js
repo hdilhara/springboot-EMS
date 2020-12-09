@@ -1,25 +1,65 @@
 import Axios from 'axios';
 import { employeeApiUrl, projectAPIurl, taskAPIurl, empProTaskAPIurl } from '../config/config';
 
+
+
+function getToken() {
+    console.log("xxxxxxxx")
+    let token = localStorage.getItem('token');
+    if (token) {
+        return 'Bearer ' + token;
+    }
+    return null;
+}
+
+export const authAxios = Axios.create({
+});
+
+
+authAxios.interceptors.request.use(
+    (config) => {
+        config.headers.Authorization = getToken();
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+authAxios.interceptors.response.use(
+    (response) =>
+        new Promise(
+            (resolve, reject) => {
+                resolve(response);
+            }
+        )
+    ,
+    (error) => {
+        if (error.response.status === 403) {
+            window.location = "/403";
+        }
+    }
+);
+
 export function getEmployees(callBack) {
-    Axios.get(employeeApiUrl)
+    authAxios.get(employeeApiUrl)
         .then(res => callBack(res.data))
         .catch(e => console.log(e));
 }
 export function getProjects(callBack) {
-    Axios.get(projectAPIurl)
+    authAxios.get(projectAPIurl)
         .then(res => callBack(res.data))
         .catch(e => console.log(e));
 }
 export function getProjectsByIds(ids, callBack) {
+    console.log(">>>>.///j")
     console.log(ids)
     ids = ids.join(',');
-    Axios.get('http://localhost:9000/project/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
+    authAxios.get('http://localhost:9000/project/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
         .then(res => callBack(res.data))//callBack(res.data))
         .catch(e => console.log(e));
 }
 export function getTasks(callBack) {
-    Axios.get(taskAPIurl)
+    authAxios.get(taskAPIurl)
         .then(res => callBack(res.data))
         .catch(e => console.log(e));
 }
@@ -28,27 +68,37 @@ export function getTasksByIds(ids, callBack) {
     ids = ids.join(',');
     console.log('dsfsdgfdgfhfghfghfghfghfgh')
     console.log('http://localhost:9000/task/ids/' + ids)
-    Axios.get('http://localhost:9000/task/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
+    authAxios.get('http://localhost:9000/task/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
         .then(res => callBack(res.data))//callBack(res.data))
         .catch(e => console.log(e));
 }
 export function addEmpProTask(value, callBack) {
-    Axios.post(empProTaskAPIurl, value)
+    authAxios.post(empProTaskAPIurl, value)
         .then(res => callBack('success'))
         .catch(e => console.log(e));
 }
 export function removeEmpProTask(value, callBack) {
-    Axios.post(empProTaskAPIurl + "remove", value)
+    authAxios.post(empProTaskAPIurl + "remove", value)
         .then(res => callBack('success'))
         .catch(e => console.log(e));
 }
 export function getEmpProTaskByEID(empId, callBack) {
     console.log(empProTaskAPIurl + empId)
-    Axios.get(empProTaskAPIurl + empId)
+    authAxios.get(empProTaskAPIurl + empId)
         .then(res => { callBack(res.data) })
         .catch(e => console.log(e));
 }
-
+export function getEmpProTaskByEIDPID(empId, proId, callBack) {
+    authAxios.get(empProTaskAPIurl + 'eid/pid/' + empId + '/' + proId)
+        .then(res => {
+            let taskIds = [];
+            for (let x of res.data) {
+                taskIds.push(x.id.taskId)
+            }
+            callBack(taskIds);
+        })
+        .catch(e => console.log(e));
+}
 
 
 

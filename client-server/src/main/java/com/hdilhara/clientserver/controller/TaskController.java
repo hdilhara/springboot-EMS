@@ -2,6 +2,7 @@
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -36,11 +37,21 @@ public class TaskController {
 	@Value("${task.service.url}")
 	public String taskServiceURL; 
 	
+	public void setAuthorizationHeader(HttpServletRequest request, HttpHeaders headers ) {
+		try {
+			headers.set("Authorization", request.getHeader("Authorization") );
+		}catch (NullPointerException e) {
+			//log error
+		}
+	}
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<Task> getProject(@PathVariable int id, HttpServletResponse response) {
+	public ResponseEntity<Task> getProject(@PathVariable int id,HttpServletRequest request, HttpServletResponse response) {
 		RestTemplate rt = new RestTemplate();
 		try {
-			return rt.exchange(taskServiceURL+"/task/"+id, HttpMethod.GET, new HttpEntity<Task>(new HttpHeaders()), Task.class);//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers = new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(taskServiceURL+"/task/"+id, HttpMethod.GET, new HttpEntity<Task>(headers), Task.class);//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -49,10 +60,12 @@ public class TaskController {
 	}
 	
 	@GetMapping("/")
-	public ResponseEntity<List<Task>> getProjects( HttpServletResponse response) {
+	public ResponseEntity<List<Task>> getProjects( HttpServletResponse response, HttpServletRequest request) {
 		RestTemplate rt = new RestTemplate();
 		try {
-			return rt.exchange(taskServiceURL+"/task/", HttpMethod.GET, new HttpEntity<Task>(new HttpHeaders()), new ParameterizedTypeReference<List<Task>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers = new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(taskServiceURL+"/task/", HttpMethod.GET, new HttpEntity<Task>(headers), new ParameterizedTypeReference<List<Task>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -61,10 +74,12 @@ public class TaskController {
 	}
 	
 	@GetMapping("/ids/{ids}")
-	public ResponseEntity<List<Task>> getProjectsByIds( @PathVariable String ids ,HttpServletResponse response) {
+	public ResponseEntity<List<Task>> getProjectsByIds( @PathVariable String ids, HttpServletRequest request ,HttpServletResponse response) {
 		RestTemplate rt = new RestTemplate();
 		try {
-			return rt.exchange(taskServiceURL+"/task/ids/"+ids, HttpMethod.GET, new HttpEntity<Task>(new HttpHeaders()), new ParameterizedTypeReference<List<Task>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
+			HttpHeaders headers = new HttpHeaders();
+			setAuthorizationHeader(request, headers);
+			return rt.exchange(taskServiceURL+"/task/ids/"+ids, HttpMethod.GET, new HttpEntity<Task>(headers), new ParameterizedTypeReference<List<Task>>(){});//exchange(projectServiceURL, HttpMethod.GET, new Request, responseType)
 		}
 		catch(HttpClientErrorException e) {
 			response.setStatus(404);
@@ -73,10 +88,11 @@ public class TaskController {
 	}
 	
 	@PostMapping("/")
-	public ResponseEntity<Task> createTask(@RequestBody Task task, HttpServletResponse response){
+	public ResponseEntity<Task> createTask(@RequestBody Task task, HttpServletRequest request,HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
+		headers.setContentType(MediaType.APPLICATION_JSON);	
+		setAuthorizationHeader(request, headers);
 		HttpEntity<Task> he = new HttpEntity<Task>(task,headers);
 		try {
 			return rt.exchange(taskServiceURL+"/task/", HttpMethod.POST, he, Task.class);//exchange(employeeServiceURL, HttpMethod.GET, new Request, responseType)
@@ -88,9 +104,10 @@ public class TaskController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public  ResponseEntity<Task> deleteTask(@PathVariable int id, HttpServletResponse response){
+	public  ResponseEntity<Task> deleteTask(@PathVariable int id,HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		ResponseEntity<Task> res;
 		HttpEntity<Task> he = new HttpEntity<Task>(headers);
 		try {
@@ -103,9 +120,10 @@ public class TaskController {
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<Task> updateTask(@RequestBody Task emp, HttpServletResponse response){
+	public ResponseEntity<Task> updateTask(@RequestBody Task emp,HttpServletRequest request, HttpServletResponse response){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		setAuthorizationHeader(request, headers);
 		headers.setContentType(MediaType.APPLICATION_JSON);		
 		HttpEntity<Task> he = new HttpEntity<Task>(emp,headers);
 		try {

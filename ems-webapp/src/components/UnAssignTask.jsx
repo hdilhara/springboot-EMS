@@ -1,134 +1,167 @@
 import React, { Component } from 'react';
-import { addEmpProTask, getEmployees, getProjects, getTasks, getEmpProTaskByEID, removeEmpProTask } from '../services/backEndService';
-import Axios from 'axios';
 import AppSelectOption from './common/AppSelectOption';
-import AppLoading from './common/AppLoading';
+import { getEmployees, getEmpProTaskByEID, getProjectsByIds, getEmpProTaskByEIDPID, getTasksByIds, removeEmpProTask } from '../services/backEndService';
 
 class UnAssignTask extends Component {
     state = {
-        employees: '',
-        projects: '',
-        tasks: '',
-        selectedEmpId: '',
-        selectedProIds: '',
-        selectedTaskIds: '',
-        value: {
-            empId: '',
-            proId: '',
-            taskId: ''
-        },
-        isLoading: true
+        employees: null,
+        projects: null,
+        tasks: null,
+        selectedEmpId: null,
+        selectedProId: null,
+        selectedTaskId: null,
+
     }
 
-    handleFormOnChange = (e) => {
-        const value = { ...this.state.value };
-        value[e.currentTarget.name] = e.currentTarget.value;
-        this.setState({ value });
-        if (e.currentTarget.name === 'empId') {
-            this.setState({ selectedEmpId: e.currentTarget.value });
-            getEmpProTaskByEID(e.currentTarget.value, this.filterCallback)
+
+    setEmployeesValues = (values) => {
+        this.setState({ employees: values });
+    }
+
+    setProjectValues = (values) => {
+        this.setState({ projects: values });
+    }
+
+    setTasksValues = (values) => {
+        this.setState({ tasks: values });
+
+    }
+
+    getEmployeeProjects = (value) => {
+        let proIds = [];
+        for (let x of value) {
+            proIds.push(x.id.proId)
         }
-    }
-
-    filterCallback = (vals) => {
-        if (vals) {
-            let selectedProIds = [];
-            let selectedTaskIds = [];
-            for (let x of vals) {
-                selectedProIds.push(x.id.proId);
-                selectedTaskIds.push(x.id.taskId);
+        //remove duplicates
+        proIds.sort((a, b) => a - b);
+        console.log(proIds)
+        proIds = proIds.filter((a, b) => {
+            if (b > 0 && a === proIds[b - 1]) {
+                return false;
             }
-            selectedProIds = [...(new Set(selectedProIds))];
-            selectedTaskIds = [...(new Set(selectedTaskIds))];
-            this.setState({ selectedProIds })
-            this.setState({ selectedTaskIds })
+            return true;
+        })
+        getProjectsByIds(proIds, this.setProjectValues);
+    }
+    getEmployeeProjectTask = (taskIds) => {
+        console.log(taskIds)
+        getTasksByIds(taskIds, this.setTasksValues)
+    }
+    restValues = () => {
+        // this.setState({ employees: null });
+        this.setState({ projects: null });
+        this.setState({ tasks: null });
+        // this.setState({ selectedEmpId: null });
+        this.setState({ selectedProId: null });
+        this.setState({ selectedTaskId: null });
+        getEmpProTaskByEID(this.state.selectedEmpId, this.getEmployeeProjects);
+    }
+    handleOnSubmit = (e) => {
+        e.preventDefault();
+        let value = {
+            empId: this.state.selectedEmpId,
+            proId: this.state.selectedProId,
+            taskId: this.state.selectedTaskId,
         }
-
+        const { selectedEmpId, selectedProId, selectedTaskId } = this.state;
+        if (selectedEmpId && selectedProId && selectedTaskId) {
+            removeEmpProTask(value, this.restValues);
+            window.alert("Successfully unassigned task!");
+        }
+        else
+            window.alert("Please Select All three values!");
     }
 
-
-
-    onFormSubmit = (e) => {
-        e.preventDefault();
-        removeEmpProTask(this.state.value, this.callbackAddEPT)
+    handleOnChange = (e) => {
+        let val = e.currentTarget.value;
+        if (e.currentTarget.name === 'empId') {
+            this.setState({ selectedEmpId: val })
+            this.setState({ projects: null });
+            this.setState({ tasks: null });
+            getEmpProTaskByEID(val, this.getEmployeeProjects);
+        }
+        else if (e.currentTarget.name === 'proId') {
+            this.setState({ selectedProId: val })
+            console.log(this.state.selectedEmpId)
+            getEmpProTaskByEIDPID(this.state.selectedEmpId, val, this.getEmployeeProjectTask)
+        }
+        else if (e.currentTarget.name === 'taskId') {
+            this.setState({ selectedTaskId: val })
+        }
     }
 
     render() {
 
-        const { selectedEmpId, projects, selectedProIds, tasks, selectedTaskIds, isLoading } = this.state;
+        const { employees, projects, tasks } = this.state;
 
         return (
-            <div className="app-center-container" >
+            <div className="container app-center-container" >
                 <h1>Unassign Task</h1>
-                <form onSubmit={this.onFormSubmit} >
-                    <div >
-                        <div style={{ padding: '15px' }} ><b>Select Employee</b></div>
-                        <AppSelectOption
-                            onChanegeHandeler={this.handleFormOnChange}
-                            name="empId"
-                            title="Employee"
-                            values={this.state.employees}
-                            disVal1="empId"
-                            disVal2="firstName"
-                            disVal3="lastName"
-                        />
-                        <div style={{ padding: '15px' }}  ><b>Select Project</b></div>
-                        <AppSelectOption
-                            onChanegeHandeler={this.handleFormOnChange}
-                            name="proId"
-                            title="Project"
-                            values={(selectedEmpId) ? projects.filter(a => selectedProIds.includes(a.proId)) : null}
-                            disVal1="proId"
-                            disVal2="proName"
-                            disVal3="companyName"
-                        />
-                        <div style={{ padding: '15px' }}  ><b>Select Task</b></div>
-                        <AppSelectOption
-                            onChanegeHandeler={this.handleFormOnChange}
-                            name="taskId"
-                            title="Task"
-                            values={(selectedEmpId) ? tasks.filter(a => selectedTaskIds.includes(a.taskId)) : null}
-                            disVal1="taskId"
-                            disVal2="taskTitle"
-                            disVal3='description'
-                        />
+                <div>
+                    <form onSubmit={this.handleOnSubmit} >
+                        {
+                            employees &&
+                            <div>
+                                <div style={{ padding: '15px' }}  ><b>Select Employee</b></div>
+                                <AppSelectOption
+                                    name='empId'
+                                    title='Select Employee'
+                                    values={this.state.employees}
+                                    disVal1='empId'
+                                    disVal2='firstName'
+                                    disVal3='lastName'
+                                    onChanegeHandeler={this.handleOnChange}
+                                />
+                            </div>
+                        }
+
+                        {
+                            projects ?
+                                <div>
+                                    <div style={{ padding: '15px' }}  ><b>Select Project</b></div>
+                                    <AppSelectOption
+                                        name='proId'
+                                        title='Select Project'
+                                        values={this.state.projects}
+                                        disVal1='proId'
+                                        disVal2='proName'
+                                        disVal3='country'
+                                        onChanegeHandeler={this.handleOnChange}
+                                    />
+                                </div>
+                                : <div style={{ padding: '15px' }}  ><b>There are no tasks available!</b></div>
+                        }
+
+                        {
+                            tasks &&
+                            <div>
+                                <div style={{ padding: '15px' }}  ><b>Select Task</b></div>
+                                <AppSelectOption
+                                    name='taskId'
+                                    title='Select Task'
+                                    values={this.state.tasks}
+                                    disVal1='taskId'
+                                    disVal2='taskTitle'
+                                    disVal3='description'
+                                    onChanegeHandeler={this.handleOnChange}
+                                />
+                            </div>
+                        }
                         <br />
-                        <button style={{ margin: '25px 0' }} className="btn btn-danger">Unassign Task</button>
-                    </div>
-                </form>
+                        <button className="btn btn-sm btn-danger"  >
+                            Unassign
+                        </button>
+                    </form>
+                </div>
+
             </div>
         );
     }
 
-
-
-    callBackGetEmployees = (values) => {
-        this.setState({ employees: values });
-    }
-    callBackGetProjects = (values) => {
-        if (values.length > 0)
-            this.setState({ projects: values });
-    }
-    callBackGetTasks = (values) => {
-        this.setState({ tasks: values });
-    }
-    callbackAddEPT = (values) => {
-        getEmpProTaskByEID(0, this.filterCallback)
-    }
-
     componentDidMount() {
-        getEmployees(this.callBackGetEmployees);
-        getProjects(this.callBackGetProjects);
-        getTasks(this.callBackGetTasks);
+        getEmployees(this.setEmployeesValues);
     }
-}
 
-const styles = {
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column'
-    }
 }
 
 export default UnAssignTask;
