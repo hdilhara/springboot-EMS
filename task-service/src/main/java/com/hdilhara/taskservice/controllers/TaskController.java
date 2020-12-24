@@ -1,25 +1,14 @@
 package com.hdilhara.taskservice.controllers;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hdilhara.taskservice.entities.Task;
 import com.hdilhara.taskservice.repositories.TaskRepo;
+import com.hdilhara.taskservice.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-
-
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @RestController
@@ -27,84 +16,65 @@ import com.hdilhara.taskservice.repositories.TaskRepo;
 public class TaskController {
 
 	@Autowired
-	TaskRepo taskRepo;
+	TaskService service;
+
 	@GetMapping("/")
-	public List<Task> getTasks( HttpServletResponse response) {
-		List<Task> tasks = null;
-		try {
-			tasks = (List<Task>)taskRepo.findAll();
-		}catch (Exception e) {
-//			System.out.println(e);
+	public ResponseEntity<List<Task>> getTasks(HttpServletResponse response) {
+		List<Task> tasks = service.fetchAllTasks();
+		if(tasks == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(tasks);
 		}
-//		if(Tasks == null)
-//			response.setStatus(404);
-		return tasks;
 	}
 	
 	@GetMapping("/{id}")
-	public Task getTask(@PathVariable int id, HttpServletResponse response) {
-		Task task = null;
-		try {
-			task = taskRepo.findById(id).get();
-		}catch (Exception e) {
-//			System.out.println(e);
+	public ResponseEntity<Task> getTask(@PathVariable int id, HttpServletResponse response) {
+		Task task = service.fetchTaskById(id);
+		if(task == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(task);
 		}
-		if(task == null)
-			response.setStatus(404);
-		return task;
 	}
 	
 	@GetMapping("/ids/{ids}")
-	public List<Task> getTasksByIds(@PathVariable List<Integer> ids, HttpServletResponse response) {
-		List<Task> tasks = null;
-		try {
-			tasks = (List<Task>)taskRepo.findAllById(ids);
-		}catch (Exception e) {
-//			System.out.println(e);
+	public ResponseEntity<List<Task>> getTasksByIds(@PathVariable List<Integer> ids, HttpServletResponse response) {
+		List<Task> tasks = service.fetchTasksByIds(ids);
+		if(tasks == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(tasks);
 		}
-//		if(Tasks == null)
-//			response.setStatus(404);
-		return tasks;
 	}
 	
 	@PostMapping("/")
-	public Task createTask(@RequestBody Task task) {
-		Task result = null;
-		try {
-			result = taskRepo.save(task);
-		}catch (Exception e) {
-//			System.out.println(e);
+	public ResponseEntity<Task> createTask(@RequestBody Task ta) {
+		Task task = service.createTask(ta);
+		if(task == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(task);
 		}
-		return result;
 	}
 	
 	@DeleteMapping("/{id}")
-	public Task deleteTask(@PathVariable int id, HttpServletResponse response){
-		Task pro = null;
-		try {
-			pro = taskRepo.findById(id).get();
-			taskRepo.deleteById(id);
-			return pro;
-		}
-		catch(Exception e){
-			response.setStatus(404);
-			return null;
+	public ResponseEntity<Task> deleteTask(@PathVariable int id, HttpServletResponse response){
+		Task task = service.deleteTask(id);
+		if(task == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(task);
 		}
 	}
 	
 	@PutMapping("/")
-	public Task updateTask(@RequestBody Task pro,HttpServletResponse response){
-		try {
-			if(!taskRepo.findById(pro.getTaskId()).isPresent()) {
-				response.setStatus(404);
-				return null;
-			}
-			taskRepo.save(pro);
-			return pro;
-		}
-		catch(Exception e){
-			response.setStatus(404);
-			return null;
+	public ResponseEntity<Task> updateTask(@RequestBody Task ta, HttpServletResponse response){
+		Task task = service.updateTask(ta);
+		if(task == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(task);
 		}
 	}
 	

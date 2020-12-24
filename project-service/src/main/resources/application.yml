@@ -1,23 +1,35 @@
-server:
-   port: 9002
+#server:
+#  port: 9002
 
+#spring:
+# datasource:
+#  url: jdbc:sqlserver://localhost;databasename=ems_db
+#  username: user
+#  password: pass
+#  driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#  initialization-mode: always
+# jpa:
+#  show-sql: true
+#  hibernate:
+#   dialect: org.hibernate.dialect.SQLServer2012Dialect
+#   ddl-auto: create-drop
+
+#mysql connect
 spring:
- datasource:
-  url: jdbc:sqlserver://localhost;databasename=ems_db
-  username: user
-  password: pass
-  driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-  initialization-mode: always
- jpa:
-  show-sql: true
-  hibernate:
-   dialect: org.hibernate.dialect.SQLServer2012Dialect
-   ddl-auto: create-drop
-   
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/ems_db?createDatabaseIfNotExist=true
+    username: root
+    password: 1qaz2wsx#
+    initialization-mode: always
+
 security:
   oauth2:
     resource:
-      token-info-uri: http://localhost:9006/oauth/check_token
+      token-info-uri: http://localhost:8080/oauth/oauth/check_token
+#      token-info-uri: http://localhost:9006/oauth/check_token
     client:
       client-id: client
       client-secret: secret

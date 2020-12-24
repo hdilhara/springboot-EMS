@@ -101,16 +101,34 @@ class NavigationBar extends Component {
 
     getToken() {
         //get token
-        var token;
-        var arr = document.cookie.split(';');
-        for (let s of arr) {
-            if (s.includes('token')) {
-                token = s.split("=")[1].trim();
-            }
+        var token = null;
+        // var arr = document.cookie.split(';');
+        // for (let s of arr) {
+        //     if (s.includes('token')) {
+        //         token = s.split("=")[1].trim();
+        //     }
+        // }
+        if(localStorage.getItem('token'))
+            return localStorage.getItem('token');
+        else{
+            let qp =  window.location.href;
+           try{
+                qp = qp.split("?") 
+                if(qp.length>0){
+                    qp = qp[1].split("=");
+                    if(qp[0] === 'token')
+                        token = qp[1];
+                }
+                if(token){
+                    localStorage.setItem('token', token);
+                    console.log(token)
+                }
+           }
+           catch(e){
+
+           }
+            return token;
         }
-        if (token)
-            localStorage.setItem('token', token);
-        return token;
     }
 
     getUser() {

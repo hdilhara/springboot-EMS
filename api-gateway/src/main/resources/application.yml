@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+#      globalcors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowedOrigins: "*"
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - OPTION
+#              - DELETE
+#              - PUT
+      routes:
+        - id: auth-service
+          predicates:
+            - Path=/oauth/**
+          filters:
+            - StripPrefix=1
+          uri: "lb://AUTH-SERVICE"
+        - id: client-service
+          predicates:
+            - Path=/client/**
+          filters:
+            - StripPrefix=1
+          uri: "lb://CLIENT-SERVICE"
+        - id: employee-service
+          predicates:
+            - Path=/employee/**
+          filters:
+            - StripPrefix=1
+          uri: "lb://EMPLOYEE-SERVICE"
+        - id: project-service
+          predicates:
+            - Path=/project/**
+          filters:
+            - StripPrefix=1
+          uri: "lb://PROJECT-SERVICE"
+        - id: task-service
+          predicates:
+            - Path=/task/**
+          filters:
+            - StripPrefix=1
+          uri: "lb://TASK-SERVICE"
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    instance-id: ${spring.application.name}-${random.int}
+    hostname: localhost

@@ -54,7 +54,7 @@ export function getProjectsByIds(ids, callBack) {
     console.log(">>>>.///j")
     console.log(ids)
     ids = ids.join(',');
-    authAxios.get('http://localhost:9000/project/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
+    authAxios.get(projectAPIurl+'ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
         .then(res => callBack(res.data))//callBack(res.data))
         .catch(e => console.log(e));
 }
@@ -67,8 +67,8 @@ export function getTasksByIds(ids, callBack) {
     console.log("sdsdsds>>>>" + ids)
     ids = ids.join(',');
     console.log('dsfsdgfdgfhfghfghfghfghfgh')
-    console.log('http://localhost:9000/task/ids/' + ids)
-    authAxios.get('http://localhost:9000/task/ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
+    console.log(taskAPIurl+'ids/' + ids)
+    authAxios.get(taskAPIurl+'ids/' + ids)//(projectAPIurl + 'ids / ' + ids)
         .then(res => callBack(res.data))//callBack(res.data))
         .catch(e => console.log(e));
 }

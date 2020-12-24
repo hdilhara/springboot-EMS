@@ -1,26 +1,14 @@
 package com.hdilhara.projectservice.controllers;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
 import com.hdilhara.projectservice.entities.Project;
 import com.hdilhara.projectservice.repositories.ProjectRepo;
+import com.hdilhara.projectservice.service.ProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @RestController
@@ -28,87 +16,69 @@ import com.hdilhara.projectservice.repositories.ProjectRepo;
 public class ProjectController {
 
 	@Autowired
-	ProjectRepo projectRepo;
+	ProjectService service;
+
+
 	@GetMapping("/")
-	public List<Project> getProjects( HttpServletResponse response) {
-		List<Project> Projects = null;
-		try {
-			Projects = (List<Project>)projectRepo.findAll();
-		}catch (Exception e) {
-//			System.out.println(e);
+	public ResponseEntity<List<Project>> getProjects(HttpServletResponse response) {
+		List<Project> projects = service.fetchAllProjects();
+		if(projects == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(projects);
 		}
-//		if(Projects == null)
-//			response.setStatus(404);
-		return Projects;
 	}
 	
 	@GetMapping("/{id}")
-	public Project getProject(@PathVariable int id, HttpServletResponse response) {
-		Project emp = null;
-		try {
-			emp = projectRepo.findById(id).get();
-		}catch (Exception e) {
-//			System.out.println(e);
+	public ResponseEntity<Project> getProject(@PathVariable int id, HttpServletResponse response) {
+		Project projects = service.fetchrojectById(id);
+		if(projects == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(projects);
 		}
-		if(emp == null)
-			response.setStatus(404);
-		return emp;
 	}
 	
 	@GetMapping("/ids/{ids}")
-	public List<Project> getProjectsUsingIds(@PathVariable List<Integer> ids, HttpServletResponse response) {
-		List<Project> projects =null;
-		try {
-			projects  = (List<Project>) projectRepo.findAllById(ids);
-		}catch (Exception e) {
-//			System.out.println(e);
+	public ResponseEntity<List<Project>> getProjectsUsingIds(@PathVariable List<Integer> ids, HttpServletResponse response) {
+		List<Project> projects = service.fetchrojectsByIds(ids);
+		if(projects == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(projects);
 		}
-//		if(Projects == null)
-//			response.setStatus(404);
-		return projects;
-		
 	}
 	
 	@PostMapping("/")
-	public Project createProject(@RequestBody Project pro) {
-		Project result = null;
-		try {
-			result = projectRepo.save(pro);
-			return result;
-		}catch (Exception e) {
-//			System.out.println(e);
-			return result;
+	public ResponseEntity<Project> createProject(@RequestBody Project pro) {
+		Project project = service.saveProject(pro);
+		if(project == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(project);
 		}
+
 	}
 	
 	@DeleteMapping("/{id}")
-	public Project deleteProject(@PathVariable int id, HttpServletResponse response){
-		Project pro = null;
-		try {
-			pro = projectRepo.findById(id).get();
-			projectRepo.deleteById(id);
-			return pro;
-		}
-		catch(Exception e){
-			response.setStatus(404);
-			return null;
+	public ResponseEntity<Project> deleteProject(@PathVariable int id, HttpServletResponse response){
+		Project project = service.deleteProject(id);
+		if(project == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(project);
 		}
 	}
 	
 	@PutMapping("/")
-	public Project updateProject(@RequestBody Project pro,HttpServletResponse response){
-		try {
-			if(!projectRepo.findById(pro.getProId()).isPresent()) {
-				response.setStatus(404);
-				return null;
-			}
-			projectRepo.save(pro);
-			return pro;
+	public ResponseEntity<Project> updateProject(@RequestBody Project pro, HttpServletResponse response){
+		Project project = service.updateProjectById(pro);
+		if(project == null){
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok().body(project);
 		}
-		catch(Exception e){
-			response.setStatus(404);
-			return null;
-		}
+
 	}
 	
 }

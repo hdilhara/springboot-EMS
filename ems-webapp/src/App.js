@@ -20,6 +20,7 @@ import AssignTasks from './components/AssignTasks';
 import UnAssignTask from './components/UnAssignTask';
 import PageNotFound from './components/common/PageNotFound';
 import ViewProjectsTasks from './components/ViewProjectsTasks';
+import AppFooter from './components/common/AppFooter';
 
 import { isLogedIn } from './services/loginService';
 import AuthRoute from './components/common/AuthRoute';
@@ -30,6 +31,7 @@ import About from './components/About';
 function App() {
   return (
     <div >
+      <div className="app-body">
       <NavigationBar></NavigationBar>
 
       <Switch>
@@ -54,6 +56,9 @@ function App() {
         //redirect
         <Redirect to="/404" />
       </Switch>
+      </div>
+
+      <AppFooter></AppFooter>
     </div>
   );
 }

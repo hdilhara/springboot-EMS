@@ -1,0 +1,11 @@
+#server:
+# port: 9006
+
+user:
+  oauth:
+    clientId: client
+    clientSecret: secret
+    redirectUris: http://localhost:8080/client/login
+    user:
+      username: user
+      password: pass
