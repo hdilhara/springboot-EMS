@@ -1,0 +1,9 @@
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=1qaz2wsx# -d mariadb:latest
+sudo docker run -d -it --network host --name discovery discovery
+sudo docker run -d -it --network host --name apigateway apigateway
+sudo docker run -d -it --network host --name clientservice clientservice
+sudo docker run -d -it --network host --name authservice authservice
+
+sudo docker run -d -it --network host -e MYSQL_HOST='172.18.0.2' --name taskservice taskservice
+sudo docker run -d -it --network host -e MYSQL_HOST='172.18.0.2' --name projectservice projectservice
+sudo docker run -d -it --network host -e MYSQL_HOST='172.18.0.2' --name employeeservice employeeservice
