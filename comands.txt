@@ -1,0 +1,67 @@
+~~~Docker network commands~~~
+sudo docker network inspect my-net
+
+~~~mysql command~~~
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=1qaz2wsx# -d mariadb:latest
+
+~~~web app client~~~
+sudo docker build -t webapp .
+sudo docker run -d --network my-net -p 3000:3000 --name webapp webapp
+
+~~~mysql docker run~~~~
+sudo docker run -it --name mysql --network my-net -e MYSQL_ROOT_PASSWORD=1qaz2wsx# -d mariadb:latest
+
+~~~discovery ~~~
+-build
+sudo docker build -t discovery .
+-run
+sudo docker run -d -it --network my-net  --name discovery -p 8761:8761 discovery
+
+~~~API gateway~~~
+-build 
+ sudo docker build -t apigateway .
+-rrun 
+sudo docker run -d -it --network my-net -p 8080:8080 --name apigateway apigateway
+
+~~~Auth Service~~~
+-build
+ sudo docker build -t authservice .
+-rrun
+sudo docker run -d -it  --network my-net --name authservice authservice
+
+
+~~~Employee Service~~~
+-build
+sudo docker build -t employeeservice .
+-run
+sudo docker run -d -it  --network my-net --name employeeservice employeeservice
+
+~~~Project Service~~~
+-build
+sudo docker build -t projectservice .
+-run
+sudo docker run -d -it --network my-net --name projectservice projectservice
+
+~~~Task Service~~~
+-build
+sudo docker build -t taskservice .
+-run
+sudo docker run -d -it  --network my-net --name taskservice taskservice
+
+~~~CLIENT app~~
+-build
+sudo docker build -t clientservice .
+-run
+sudo docker run -d -it --network my-net --name clientservice clientservice
+
+
+
+
+~~~~~~~Eureka client change code
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/ 
+
